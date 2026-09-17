@@ -1,2 +1,4 @@
 /.idea
 /.gitignore
+/prototype_mqtt/obj
+/prototype_tcp/obj
