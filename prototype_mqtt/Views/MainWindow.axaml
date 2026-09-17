@@ -1,0 +1,87 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:prototype_mqtt.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="prototype_mqtt.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="prototype_mqtt">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainViewModel />
+    </Design.DataContext>
+
+    <Grid
+        ColumnDefinitions="* *">
+        <Border 
+            Grid.Column="0"
+            BorderBrush="Blue"
+            BorderThickness="1">
+            <StackPanel 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                Spacing="15">
+                <TextBlock 
+                    Text="{Binding ConnectionStatus}" 
+                    HorizontalAlignment="Center" 
+                    Foreground="Gray"/>
+        
+                <!-- Đèn LED trạng thái -->
+                <Ellipse Width="60" Height="60" 
+                         Fill="{Binding LedColor}"
+                         Stroke="Black" StrokeThickness="2"/>
+
+                <TextBlock Text="{Binding StatusText}" 
+                           HorizontalAlignment="Center" 
+                           FontWeight="Bold"/>
+
+                <!-- Nút điều khiển -->
+                <Button Content="Bật / Tắt LED Opta" 
+                        Command="{Binding ToggleLedCommand}" 
+                        Padding="15,8" 
+                        HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+        <Border 
+            Grid.Column="1"
+            BorderBrush="Blue"
+            BorderThickness="1">
+            <StackPanel 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                Spacing="15">
+                <!-- Parameter Setting -->
+                <TextBlock Text="{Binding PressureChannel.Name}" FontWeight="Bold"/>
+                <TextBlock Text="Set Value"/>
+                <TextBox 
+                    Name="TxbxSetValue"
+                    Text="{Binding PressureChannel.SetValue, Mode=TwoWay}"
+                    IsEnabled="False"/>
+                <TextBlock 
+                    Text="Current Value"/>
+                <TextBox 
+                    Name="TxbxCurrentValue"
+                    Text="{Binding PressureChannel.CurrentValue, Mode=OneWay}"
+                    IsReadOnly="True" 
+                    Background="#aaa"/>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Button 
+                        Name="BtnSave"
+                        Content="Save" 
+                        IsEnabled="False" 
+                        Click="SaveBtn_OnClick"/>
+                    <Button 
+                        Name="BtnEdit"
+                        Content="Edit" 
+                        Click="EditBtn_OnClick"/>
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
+
+    </Grid>
+</Window>

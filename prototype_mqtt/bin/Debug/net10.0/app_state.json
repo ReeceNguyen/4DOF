@@ -1,0 +1,13 @@
+{
+  "LastUpdated": "2026-09-18T02:36:05.492255+07:00",
+  "DigitalStates": {
+    "Opta LED": true
+  },
+  "IsLedOn": true,
+  "ParameterSetValues": {
+    "Temperature": "",
+    "Pressure": "12.45"
+  },
+  "SetTem1": 0,
+  "CurrentTem1": 0
+}
