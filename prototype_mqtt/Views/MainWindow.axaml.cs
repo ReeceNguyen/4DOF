@@ -16,11 +16,13 @@ public partial class MainWindow : Window
         // Publish the typed value via MQTT and persist to file
         if (DataContext is prototype_mqtt.ViewModels.MainViewModel vm)
         {
-            await vm.SaveChannelAsync(vm.PressureChannel, this.TxbxSetValue.Text ?? string.Empty);
+            await vm.SaveChannelAsync(vm.PressureChannel, this.TxbxSetPressure.Text ?? string.Empty);
+            await vm.SaveChannelAsync(vm.TemperatureChannel,this.TxbxSetTemperature.Text??string.Empty);
         }
 
         // Disable editing after save
-        this.TxbxSetValue.IsEnabled = false;
+        this.TxbxSetPressure.IsEnabled = false;
+        this.TxbxSetTemperature.IsEnabled = false;
         this.BtnSave.IsEnabled = false;
     }
 
@@ -36,7 +38,8 @@ public partial class MainWindow : Window
         if (result == ButtonResult.Yes)
         {
             // Enable Set Value textbox and Save button
-            this.TxbxSetValue.IsEnabled = true;
+            this.TxbxSetPressure.IsEnabled = true;
+            this.TxbxSetTemperature.IsEnabled = true;
             this.BtnSave.IsEnabled = true;
         }
         // If No: nothing changes

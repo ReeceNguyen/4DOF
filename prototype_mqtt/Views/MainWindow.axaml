@@ -55,17 +55,33 @@
                 VerticalAlignment="Center" 
                 Spacing="15">
                 <!-- Parameter Setting -->
+                <!-- Pressure Sensor -->
                 <TextBlock Text="{Binding PressureChannel.Name}" FontWeight="Bold"/>
                 <TextBlock Text="Set Value"/>
                 <TextBox 
-                    Name="TxbxSetValue"
+                    Name="TxbxSetPressure"
                     Text="{Binding PressureChannel.SetValue, Mode=TwoWay}"
                     IsEnabled="False"/>
                 <TextBlock 
                     Text="Current Value"/>
                 <TextBox 
-                    Name="TxbxCurrentValue"
+                    Name="TxbxCurrentPressure"
                     Text="{Binding PressureChannel.CurrentValue, Mode=OneWay}"
+                    IsReadOnly="True" 
+                    Background="#aaa"/>
+                
+                <!--Temperature Sensor-->
+                <TextBlock Text="{Binding TemperatureChannel.Name}" FontWeight="Bold"/>
+                <TextBlock Text="Set Value"/>
+                <TextBox 
+                    Name="TxbxSetTemperature"
+                    Text="{Binding TemperatureChannel.SetValue, Mode=TwoWay}"
+                    IsEnabled="False"/>
+                <TextBlock 
+                    Text="Current Value"/>
+                <TextBox 
+                    Name="TxbxCurrentTemperature"
+                    Text="{Binding TemperatureChannel.CurrentValue, Mode=OneWay}"
                     IsReadOnly="True" 
                     Background="#aaa"/>
                 <StackPanel Orientation="Horizontal" Spacing="10">
@@ -81,6 +97,7 @@
                 </StackPanel>
 
             </StackPanel>
+            
         </Border>
 
     </Grid>

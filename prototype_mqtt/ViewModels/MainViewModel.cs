@@ -83,8 +83,8 @@ public partial class MainViewModel : ViewModelBase
         TemperatureChannel = new ParameterChannelViewModel(new DeviceParameter
         {
             Name       = "Temperature",
-            WriteTopic = "opta/param/setvalue",
-            ReadTopic  = "opta/param/currentvalue"
+            WriteTopic = "opta/temperature/setpoint",
+            ReadTopic  = "opta/temperature/current"
         });
 
         PressureChannel = new ParameterChannelViewModel(new DeviceParameter
