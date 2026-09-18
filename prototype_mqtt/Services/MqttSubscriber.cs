@@ -13,8 +13,7 @@ public class MqttSubscriber : MqttPublisher
     /// </summary>
     public event Action<string, string>? OnTopicMessageReceived;
 
-    /// <summary>Legacy event kept for backward compatibility.</summary>
-    public event Action<bool>? OnLedStatusReceived;
+
 
     public MqttSubscriber() : this(new MqttConfig()) { }
     public MqttSubscriber(IMqttClient client, MqttConfig config) : base(client, config) { SetupHandler(); }
@@ -30,12 +29,7 @@ public class MqttSubscriber : MqttPublisher
             // Generic routing for any device
             OnTopicMessageReceived?.Invoke(topic, payload);
 
-            // Legacy callback support
-            if (topic == "opta/led/status")
-            {
-                var isLedOn = payload == "1" || payload.Equals("true", StringComparison.OrdinalIgnoreCase);
-                OnLedStatusReceived?.Invoke(isLedOn);
-            }
+
 
             return Task.CompletedTask;
         };
@@ -47,7 +41,4 @@ public class MqttSubscriber : MqttPublisher
         if (_mqttClient != null && _mqttClient.IsConnected)
             await _mqttClient.SubscribeAsync(topic);
     }
-
-    /// <summary>Legacy helper for subscribing to LED status.</summary>
-    public Task SubscribeLedStatusAsync(string topic) => SubscribeTopicAsync(topic);
 }

@@ -26,6 +26,5 @@ public class MqttPublisher : MqttServices
         }
     }
 
-    /// <summary>Convenience helper for legacy code calling LED command.</summary>
-    public Task SendLedCommandAsync(bool turnOn) => SendValueAsync("opta/led/status", turnOn ? "1" : "0");
+
 }

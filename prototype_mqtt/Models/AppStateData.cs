@@ -13,20 +13,17 @@ public class AppStateData
     /// </summary>
     public Dictionary<string, bool> DigitalStates { get; set; } = new();
 
-    /// <summary>
-    /// Legacy property preserved for backward compatibility with existing JSON files.
-    /// Maps to DigitalStates["Opta LED"].
-    /// </summary>
+
     public bool IsLedOn
     {
-        get => DigitalStates.TryGetValue("Opta LED", out var val) ? val : _isLedOnLegacy;
+        get => DigitalStates.TryGetValue("Opta LED", out var val);
         set
         {
-            _isLedOnLegacy = value;
+
             DigitalStates["Opta LED"] = value;
         }
     }
-    private bool _isLedOnLegacy = false;
+
 
     /// <summary>
     /// Stores the last user-written set value per parameter channel.
