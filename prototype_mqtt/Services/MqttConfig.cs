@@ -6,7 +6,7 @@ public class MqttConfig
     {
         
     }
-    public string Uri { get; set; } = "192.168.1.234";
+    public string Uri { get; set; } = "10.0.0.4";
     public string Username { get; set; } = "opta";
     public string Password { get; set; } = "s7200smart";
     public int Port { get; set; } = 1883;

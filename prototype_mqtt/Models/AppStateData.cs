@@ -13,18 +13,7 @@ public class AppStateData
     /// </summary>
     public Dictionary<string, bool> DigitalStates { get; set; } = new();
 
-
-    public bool IsLedOn
-    {
-        get => DigitalStates.TryGetValue("Opta LED", out var val);
-        set
-        {
-
-            DigitalStates["Opta LED"] = value;
-        }
-    }
-
-
+    
     /// <summary>
     /// Stores the last user-written set value per parameter channel.
     /// Key   = DeviceParameter.Name  (e.g. "Pressure", "Temperature")
@@ -32,7 +21,4 @@ public class AppStateData
     /// CurrentValue is excluded — it is always live from the broker.
     /// </summary>
     public Dictionary<string, string> ParameterSetValues { get; set; } = new();
-
-    public double SetTem1 { get; set; } = 0;
-    public double CurrentTem1 { get; set; } = 0;
 }

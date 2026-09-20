@@ -30,14 +30,7 @@ public class JsonDataLogger
         }
     }
 
-    // Convenience overload: update only the LED state, preserving other fields
-    public async Task SaveStateAsync(bool isLedOn)
-    {
-        var existing = await LoadStateAsync() ?? new AppStateData();
-        existing.IsLedOn = isLedOn;
-        await SaveStateAsync(existing);
-    }
-
+    
     public async Task<AppStateData?> LoadStateAsync()
     {
         try
