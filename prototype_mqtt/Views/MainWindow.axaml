@@ -3,7 +3,7 @@
         xmlns:vm="using:prototype_mqtt.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="720"
         x:Class="prototype_mqtt.Views.MainWindow"
         x:DataType="vm:MainViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -14,9 +14,13 @@
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainViewModel />
     </Design.DataContext>
-
+<StackPanel>
+    <TextBlock 
+        Text= "{Binding ConnectionStatus}" 
+        HorizontalAlignment="Center" 
+        Foreground="Gray"/>
     <Grid
-        ColumnDefinitions="* *">
+        ColumnDefinitions="* * *">
         <Border 
             Grid.Column="0"
             BorderBrush="Blue"
@@ -25,11 +29,9 @@
                 HorizontalAlignment="Center" 
                 VerticalAlignment="Center" 
                 Spacing="15">
-                <TextBlock 
-                    Text="{Binding ConnectionStatus}" 
-                    HorizontalAlignment="Center" 
-                    Foreground="Gray"/>
-        
+                <TextBlock Text="Robot Start"
+                           HorizontalAlignment="Center"
+                           FontWeight="Bold"/>
                 <!-- Đèn LED trạng thái -->
                 <Ellipse Width="60" Height="60" 
                          Fill="{Binding LedColor}"
@@ -46,8 +48,173 @@
                         HorizontalAlignment="Center"/>
             </StackPanel>
         </Border>
+  
         <Border 
             Grid.Column="1"
+            BorderBrush="Blue"
+            BorderThickness="1">
+            <StackPanel>
+                <!-- Actual Joint Angles -->
+                <TextBlock 
+                    Text="Actual Joint Angles"
+                    HorizontalAlignment="Center"
+                    FontSize="16"
+                    FontWeight="Bold"/>
+                <Grid 
+                    ColumnDefinitions="* *"
+                    RowDefinitions="Auto Auto Auto Auto">
+                    <!-- Joint1 -->
+                    <TextBlock 
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Text="Joint1/theta1(deg)"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"/>
+                    <TextBox 
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        PlaceholderText="0"
+                        IsReadOnly="True"
+                        Margin="5 5"/>
+                    <!-- Joint2 -->
+                    <TextBlock 
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        Text="Joint2/theta2(deg)"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"/>
+                    <TextBox
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        PlaceholderText="0"
+                        IsReadOnly="True"
+                        Margin="5 5"/>
+                    <!-- Joint3 -->
+                    <TextBlock 
+                        Grid.Column="0"
+                        Grid.Row="2"
+                        Text="Joint3/theta3(deg)"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"/>
+                    <TextBox
+                        Grid.Column="1"
+                        Grid.Row="2"
+                        PlaceholderText="0"
+                        IsReadOnly="True"
+                        Margin="5 5"/>
+                    <!-- Joint4 -->
+                    <TextBlock 
+                        Grid.Column="0"
+                        Grid.Row="3"
+                        Text="Joint4/theta4(deg)"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"/>
+                    <TextBox
+                        Grid.Column="1"
+                        Grid.Row="3"
+                        PlaceholderText="0"
+                        IsReadOnly="True"
+                        Margin=" 5"/>
+                </Grid>
+                <!-- Actual End-Effector Position -->
+                <TextBlock 
+                    Text="Actual End-Effector Position"
+                    HorizontalAlignment="Center"
+                    FontSize="16"
+                    FontWeight="Bold"/>
+                <Grid 
+                    ColumnDefinitions="* *"
+                    RowDefinitions="Auto Auto Auto Auto Auto Auto">
+                    <!-- X -->
+                    <TextBlock 
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Text="X"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Margin="5 5"/>
+                    <TextBox 
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        PlaceholderText="0"
+                        IsReadOnly="True"
+                        Margin="5 5"/>
+                    <!-- Y -->
+                    <TextBlock 
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        Text="Y"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Margin="5 5"/>
+                    <TextBox
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        PlaceholderText="0"
+                        IsReadOnly="True"
+                        Margin="5 5"/>
+                    <!-- Z -->
+                    <TextBlock 
+                        Grid.Column="0"
+                        Grid.Row="2"
+                        Text="Z"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Margin="5 5"/>
+                    <TextBox
+                        Grid.Column="1"
+                        Grid.Row="2"
+                        PlaceholderText="0"
+                        IsReadOnly="True"
+                        Margin="5 5"/>
+                    <!-- Roll -->
+                    <TextBlock 
+                        Grid.Column="0"
+                        Grid.Row="3"
+                        Text="Roll"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Margin="5 5"/>
+                    <TextBox 
+                        Grid.Column="1"
+                        Grid.Row="3"
+                        PlaceholderText="0"
+                        IsReadOnly="True"
+                        Margin="5 5"/>
+                    <!-- Pitch -->
+                    <TextBlock 
+                        Grid.Column="0"
+                        Grid.Row="4"
+                        Text="Pitch"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Margin="5 5"/>
+                    <TextBox
+                        Grid.Column="1"
+                        Grid.Row="4"
+                        PlaceholderText="0"
+                        IsReadOnly="True"
+                        Margin="5 5"/>
+                    <!-- Yaw -->
+                    <TextBlock 
+                        Grid.Column="0"
+                        Grid.Row="5"
+                        Text="Yaw"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Margin="5 5"/>
+                    <TextBox
+                        Grid.Column="1"
+                        Grid.Row="5"
+                        PlaceholderText="0"
+                        IsReadOnly="True"
+                        Margin="5 5"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <Border 
+            Grid.Column="2"
             BorderBrush="Blue"
             BorderThickness="1">
             <StackPanel 
@@ -101,4 +268,5 @@
         </Border>
 
     </Grid>
+</StackPanel>
 </Window>
