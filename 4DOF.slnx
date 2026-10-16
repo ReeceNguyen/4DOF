@@ -1,4 +1,3 @@
 <Solution>
   <Project Path="prototype_mqtt/prototype_mqtt.csproj" />
-  <Project Path="prototype_tcp/prototype_tcp.csproj" />
 </Solution>
