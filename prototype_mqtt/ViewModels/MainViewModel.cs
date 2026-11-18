@@ -153,11 +153,21 @@ public partial class MainViewModel : ViewModelBase
             await _mqttClient.ConnectAsync();
             ConnectionStatus = "Đã kết nối MQTT Broker & PostgreSQL";
 
+            // Đồng bộ trạng thái Digital (LED, Relay, v.v.) về Broker
             foreach (var dCh in _digitalChannels)
             {
                 if (savedDigitalStates.TryGetValue(dCh.Name, out var savedOn))
                 {
                     await _mqttClient.SendValueAsync(dCh.Topic, savedOn ? "1" : "0");
+                }
+            }
+
+            // Đồng bộ giá trị Setpoint của Parameter (Temperature, Pressure, v.v.) về Broker
+            foreach (var pCh in _parameterChannels)
+            {
+                if (savedParamSettings.TryGetValue(pCh.Name, out var savedVal))
+                {
+                    await _mqttClient.SendValueAsync(pCh.WriteTopic, savedVal);
                 }
             }
         }
