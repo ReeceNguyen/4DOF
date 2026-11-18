@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Npgsql;
 
@@ -58,15 +58,49 @@ public class PostgresDataLogger
     // 3. Ghi nhận lịch sử số liệu thực tế cảm biến gửi về từ MQTT (INSERT)
     public async Task LogSensorReadingAsync(string paramName, string currentValue)
     {
+        try
+        {
+            const string sql = @"
+                INSERT INTO sensor_readings (param_name, current_value, recorded_at)
+                VALUES (@name, @val, CURRENT_TIMESTAMP);";
+
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("name", paramName);
+            cmd.Parameters.AddWithValue("val", currentValue);
+            await cmd.ExecuteNonQueryAsync();
+        }
+        catch (System.Exception ex)
+        {
+            System.Console.WriteLine($"[Postgres LogSensorReading Error]: {ex.Message}");
+        }
+    }
+
+    // Đảm bảo cấu trúc các bảng dữ liệu cần thiết luôn tồn tại
+    public async Task EnsureTablesCreatedAsync()
+    {
         const string sql = @"
-            INSERT INTO sensor_readings (param_name, current_value, recorded_at)
-            VALUES (@name, @val, CURRENT_TIMESTAMP);";
+            CREATE TABLE IF NOT EXISTS digital_states (
+                device_name VARCHAR(100) PRIMARY KEY,
+                is_on BOOLEAN NOT NULL,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+            CREATE TABLE IF NOT EXISTS parameter_settings (
+                param_name VARCHAR(100) PRIMARY KEY,
+                set_value TEXT NOT NULL,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+            CREATE TABLE IF NOT EXISTS sensor_readings (
+                id SERIAL PRIMARY KEY,
+                param_name VARCHAR(100) NOT NULL,
+                current_value TEXT NOT NULL,
+                recorded_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );";
 
         await using var conn = new NpgsqlConnection(_connectionString);
         await conn.OpenAsync();
         await using var cmd = new NpgsqlCommand(sql, conn);
-        cmd.Parameters.AddWithValue("name", paramName);
-        cmd.Parameters.AddWithValue("val", currentValue);
         await cmd.ExecuteNonQueryAsync();
     }
 
@@ -75,6 +109,8 @@ public class PostgresDataLogger
     {
         var digitalStates = new Dictionary<string, bool>();
         var parameterSetValues = new Dictionary<string, string>();
+
+        await EnsureTablesCreatedAsync();
 
         await using var conn = new NpgsqlConnection(_connectionString);
         await conn.OpenAsync();

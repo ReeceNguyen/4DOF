@@ -1,6 +1,17 @@
 ﻿using System;
 namespace prototype_mqtt.Models;
 
+public class DatabaseConfig
+{
+    public string Host { get; set; } = "127.0.0.1";
+    public int Port { get; set; } = 5432;
+    public string Username { get; set; } = "opta";
+    public string Password { get; set; } = "s7200smart";
+    public string Database { get; set; } = "prototype_mqtt";
+
+    public string GetConnectionString() =>
+        $"Host={Host};Port={Port};Username={Username};Password={Password};Database={Database};";
+}
 public class LedStateRecord
 {
     public int LedId { get; set; }

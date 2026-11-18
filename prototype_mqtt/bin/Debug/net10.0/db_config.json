@@ -1,0 +1,7 @@
+{
+  "Host": "127.0.0.1",
+  "Port": 5432,
+  "Username": "opta",
+  "Password": "s7200smart",
+  "Database": "prototype_mqtt"
+}

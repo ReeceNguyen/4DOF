@@ -13,7 +13,7 @@ namespace prototype_mqtt.ViewModels;
 public partial class MainViewModel : ViewModelBase
 {
     private readonly MqttSubscriber _mqttClient;
-    private readonly PostgresDataLogger _dataLogger; // Đã đổi sang PostgreSQL
+    private readonly PostgresDataLogger _dataLogger;
 
     [ObservableProperty]
     private string _connectionStatus = "Đang kết nối...";
@@ -21,18 +21,8 @@ public partial class MainViewModel : ViewModelBase
     // ═════════════════════════════════════════════════════════════════════════
     // 1. DIGITAL CHANNELS (LEDs, Relays, Valves, Switches)
     // ═════════════════════════════════════════════════════════════════════════
-    // ➕ To add a new digital device in the future:
-    //    1. Instantiate DigitalChannelViewModel with a DigitalDevice config.
-    //    2. Add it to the _digitalChannels list below.
-    //    3. Bind the UI to that channel (e.g. {Binding Relay1Channel.StatusColor}).
-    //    All MQTT subscribe, toggle command, and JSON persistence are 100% automated.
-    
     public DigitalChannelViewModel OptaLedChannel { get; }
-    
-    // Example of another digital device:
-    // public DigitalChannelViewModel Relay1Channel { get; }
 
-    // Legacy forwarded properties so existing MainWindow.axaml bindings continue working:
     public bool IsLedOn => OptaLedChannel.IsOn;
     public string LedColor => OptaLedChannel.StatusColor;
     public string StatusText => OptaLedChannel.StatusText;
@@ -48,11 +38,14 @@ public partial class MainViewModel : ViewModelBase
 
     private readonly List<ParameterChannelViewModel> _parameterChannels;
 
-    public MainViewModel()
+    // 1. Constructor mặc định (Dùng cho IDE Previewer hoặc tải cấu hình mặc định)
+    public MainViewModel() : this(DatabaseConfigViewModel.LoadConfig()) { }
+
+    // 2. Constructor chính: Nhận thông số DatabaseConfig sau khi LoginWindow xác thực thành công
+    public MainViewModel(DatabaseConfig dbConfig)
     {
-        // Thay đổi thông số Host, Username, Password, Database theo máy của bạn
-        string connString = "Host=192.168.1.66;Port=5432;Username=opta;Password=s7200smart;Database=demo;";
-        _dataLogger = new PostgresDataLogger(connString);
+        // Lấy chuỗi kết nối động từ cửa sổ LoginWindow thay vì viết cứng
+        _dataLogger = new PostgresDataLogger(dbConfig.GetConnectionString());
         _mqttClient = new MqttSubscriber();
 
         // ── Configure Digital Devices (LED, Relay, etc.) ──────────────────────
@@ -68,8 +61,7 @@ public partial class MainViewModel : ViewModelBase
             },
             (topic, payload) => _mqttClient.SendValueAsync(topic, payload),
             () => SaveStateAsync());
-        
-        // Forward property changed notifications for legacy bindings
+
         OptaLedChannel.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(DigitalChannelViewModel.IsOn))
@@ -107,7 +99,7 @@ public partial class MainViewModel : ViewModelBase
             if (digitalCh is not null)
             {
                 Dispatcher.UIThread.Post(() => digitalCh.UpdateFromPayload(payload));
-                _ = SaveStateAsync(); // Cập nhật trạng thái mới xuống DB
+                _ = SaveStateAsync();
                 return;
             }
 
@@ -116,8 +108,6 @@ public partial class MainViewModel : ViewModelBase
             if (paramCh is not null)
             {
                 Dispatcher.UIThread.Post(() => paramCh.CurrentValue = payload);
-                
-                // Ghi nhận số liệu thực tế từ cảm biến vào bảng sensor_readings
                 _ = _dataLogger.LogSensorReadingAsync(paramCh.Name, payload);
             }
         };
@@ -139,14 +129,12 @@ public partial class MainViewModel : ViewModelBase
 
             Dispatcher.UIThread.Post(() =>
             {
-                // Restore digital devices (LEDs, Relays...)
                 foreach (var dCh in _digitalChannels)
                 {
                     if (savedDigitalStates.TryGetValue(dCh.Name, out var savedOn))
                         dCh.IsOn = savedOn;
                 }
-                
-                // Restore parameter set values (CurrentValue is live from broker)
+
                 foreach (var pCh in _parameterChannels)
                 {
                     if (savedParamSettings.TryGetValue(pCh.Name, out var val))
@@ -164,8 +152,7 @@ public partial class MainViewModel : ViewModelBase
         {
             await _mqttClient.ConnectAsync();
             ConnectionStatus = "Đã kết nối MQTT Broker & PostgreSQL";
-            // Sync restored digital states to broker
-            
+
             foreach (var dCh in _digitalChannels)
             {
                 if (savedDigitalStates.TryGetValue(dCh.Name, out var savedOn))
@@ -187,9 +174,6 @@ public partial class MainViewModel : ViewModelBase
             await _mqttClient.SubscribeTopicAsync(pCh.ReadTopic);
     }
 
-    /// <summary>
-    /// Lưu Setpoint mới của cảm biến, gửi qua MQTT và lưu vào bảng parameter_settings
-    /// </summary>
     public async Task SaveChannelAsync(ParameterChannelViewModel channel, string value)
     {
         channel.SetValue = value;
@@ -197,9 +181,6 @@ public partial class MainViewModel : ViewModelBase
         await SaveStateAsync();
     }
 
-    /// <summary>
-    /// Lưu toàn bộ trạng thái LED và Setpoint vào PostgreSQL
-    /// </summary>
     private async Task SaveStateAsync()
     {
         try

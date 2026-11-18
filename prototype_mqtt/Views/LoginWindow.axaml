@@ -1,0 +1,49 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:prototype_mqtt.ViewModels"
+        x:Class="prototype_mqtt.Views.LoginWindow"
+        x:DataType="vm:DatabaseConfigViewModel"
+        Width="350" Height="550"
+        WindowStartupLocation="CenterScreen"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="prototype_mqtt"
+        CanResize="False">
+
+    <StackPanel Margin="25" Spacing="12" VerticalAlignment="Center">
+        <TextBlock Text="OPTA SCADA LOGIN" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center"/>
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="Host / IP:"/>
+            <TextBox Text="{Binding Host}" PlaceholderText="127.0.0.1"/>
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="Port:"/>
+            <NumericUpDown Value="{Binding Port}" Minimum="1" Maximum="65535" FormatString="0"/>
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="Username:"/>
+            <TextBox Text="{Binding Username}" PlaceholderText="postgres"/>
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="Password:"/>
+            <TextBox Text="{Binding Password}" PasswordChar="*" PlaceholderText="Nhập mật khẩu..."/>
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="Database:"/>
+            <TextBox Text="{Binding Database}" PlaceholderText="opta_scada"/>
+        </StackPanel>
+
+        <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" FontSize="12" Foreground="Crimson" HorizontalAlignment="Center"/>
+
+        <Button Content="Connect" 
+                Command="{Binding LoginCommand}" 
+                HorizontalAlignment="Stretch" 
+                HorizontalContentAlignment="Center" 
+                Padding="0,10"
+                Margin="0,10,0,0"/>
+    </StackPanel>
+</Window>

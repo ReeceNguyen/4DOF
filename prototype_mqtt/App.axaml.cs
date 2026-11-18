@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using prototype_mqtt.ViewModels;
@@ -17,10 +18,31 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
+            desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+            var loginWindow = new LoginWindow();
+            desktop.MainWindow = loginWindow;
+
+            loginWindow.Closed += (_, _) =>
             {
-                DataContext = new MainViewModel(),
+                if (loginWindow.AuthenticatedConfig != null)
+                {
+                    var mainWindow = new MainWindow
+                    {
+                        DataContext = new MainViewModel(loginWindow.AuthenticatedConfig)
+                    };
+
+                    desktop.MainWindow = mainWindow;
+                    desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
+                    mainWindow.Show();
+                }
+                else
+                {
+                    desktop.Shutdown();
+                }
             };
+
+            loginWindow.Show();
         }
 
         base.OnFrameworkInitializationCompleted();

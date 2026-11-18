@@ -4,10 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="720"
+        Width="850" Height="550"
+        WindowStartupLocation="CenterScreen"
         x:Class="prototype_mqtt.Views.MainWindow"
         x:DataType="vm:MainViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="prototype_mqtt">
+        Title="prototype_mqtt"
+        CanResize="False">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -15,10 +18,17 @@
         <vm:MainViewModel />
     </Design.DataContext>
 <StackPanel>
-    <TextBlock 
-        Text= "{Binding ConnectionStatus}" 
-        HorizontalAlignment="Center" 
-        Foreground="Gray"/>
+    <Grid ColumnDefinitions="*, Auto" Margin="10,5">
+        <TextBlock Grid.Column="0"
+                   Text="{Binding ConnectionStatus}" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center"
+                   Foreground="Gray"/>
+        <Button Grid.Column="1" 
+                Content="Đăng xuất / Đổi DB" 
+                Click="LogoutBtn_OnClick"
+                Padding="10,4"/>
+    </Grid>
     <Grid
         ColumnDefinitions="* *">
         <Border 
